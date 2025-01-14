@@ -1,0 +1,52 @@
+#cloud-config
+users:
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    home: /home/ubuntu
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCyDIeVgeqr9eUYwZgo7JhC87NMcbmEXQABGERToCh0CDJoKK0axjevfRbl4lY7HTLhqGAtQwnPYGUxV9HsO0HJI6jXcQ+L7AmJTNEEd6ibg0lBiWstkcivE0R+gigG5VKjq88TJ1ep1H0imMi+joTLu13wKp+3WdinTf1YJU2M0XGmK0T3NkHk/YBCxr82w7vIQFc5C+65RtJOe1cNQ7oJysL/681G9Xk58zDWUJgrfJX7NCWCf2kOsvykpKJ0Jd7QG19beVDSij76zW9ZNXZuaUciL4dchrCGaUayJaBu6Qh5KHaNpSxXkSsVImTO6jKPi0WzdvBq9L2HqEiJqQ21 aws-key
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0WGP1EZykEtv5YGC9nMiPFW3U3DmZNzKFO5nEu6uozEHh4jLZzPNHSrfFTuQ2GnRDSt+XbOtTLdcj26+iPNiFoFha42aCIzYjt6V8Z+SQ9pzF4jPPzxwXfDdkEWylgoNnZ+4MG1lNFqa8aO7F62tX0Yj5khjC0Bs7Mb2cHLx1XZaxJV6qSaulDuBbLYe8QUZXkMc7wmob3PM0kflfolR3LE7LResIHWa4j4FL6r5cQmFlDU2BDPpKMFMGUfRSFiUtaWBNXFOWHQBC2+uKmuMPYP4vJC9sBgqMvPN/X2KyemqdMvdKXnCfrzadHuSSJYEzD64Cve5Zl9yVvY4AqyBD aws-key
+ssh_pwauth: false
+disable_root: false
+package_update: true
+packages:
+  - curl
+  - wget
+  - apache2
+  - php
+  - libapache2-mod-php
+runcmd:
+  - sudo systemctl restart apache2
+write_files:
+  - path: /var/www/html/info.php
+    content: |
+      <?php
+      $myName = "Daniel Bernet";
+      ?>
+      <html>
+      <head>
+        <title><?php echo $myName ?></title>
+        <style>
+          img {
+            max-width: 25%;
+            max-height: 25%;
+          }
+        </style>
+      </head>
+      <body>
+        <p>A random cat I've found on the internet</p>
+        <figure>
+          <img src="https://s3.amazonaws.com/s3.bucket.danielb/free-photo-of-sneaking-cat-on-the-meadow.jpeg" alt="lovely cat" />
+          <figcaption>Lovely Cat</figcaption>
+        </figure>
+        <p>Video about sports</p>
+        <video width="320" height="240" controls>
+          <source src="https://storage.googleapis.com/ch_gibz_app_video/2023/02_Sportunterricht.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </body>
+      </html>
+
+    permissions: '0644'
